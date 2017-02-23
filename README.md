@@ -4,7 +4,7 @@ CS 319 Object-Oriented Software Engineering Project <br>
 Instructor: Uğur Doğrusöz <br>
 TA: Metin Can Siper <br>
 
-<h3> Dribble and Score! <h3>
+<h3> Dribble and Score! </h3>
 
 "Dribble and Score" is a game that combines two mini-games inside it. First the player will try to dribble towards the goal while incoming enemies from defenders to lawnmowers will annoy him. If the player successes so far, then he will face against a tough goal keeper, and he has to score.
 
