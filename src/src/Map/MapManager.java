@@ -27,21 +27,20 @@ public class MapManager {
      */
     private Boolean[][] bitmap;
 
-    /*
-     Map manager for Singleton Pattern, unique for all levels.
-     */
+
+    // Map manager for Singleton Pattern, unique for all levels.
     private static MapManager mapManagerInstance;
 
 
     // functions ----------
 
-    // private constructor for Singleton Pattern
-    // @param level = level of the current level,
-    // the map difficulty differentiate according to level
+    /* private constructor for Singleton Pattern
+       @param level = level of the current level,
+       the map difficulty differentiate according to level */
     private MapManager(int level) {
         // construct Map.MapManager
         obstacles = new ArrayList<>();
-        distance = setDistance(level);   // it will change according to the level
+        distance = setDistance(level);
         bitmap = new Boolean[WIDTH][distance];
     }
 
@@ -67,7 +66,7 @@ public class MapManager {
     }
 
     /* set the distance of the map according to level
-      return the distance */
+       return the distance */
     private int setDistance(int level) {
         return 0;
     }
