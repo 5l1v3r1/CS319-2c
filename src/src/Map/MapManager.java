@@ -1,5 +1,6 @@
 package Map;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 /**
@@ -10,22 +11,22 @@ public class MapManager {
 
     // attributes ----------
 
-    // constant for width of the bitmap
+    // constant for width and height of the bitmap
     private final int WIDTH = 100;
-
-    /* ArrayList for storing the info of obstacles
-     * Object will be changed with Obstacle  */
-    private ArrayList<Object> obstacles;
 
     // length of the map of the level
     private int distance;
 
     /*
     Store the bits of the coordinates of map.
-    If that bit contains enemy, it will 1,
-    if does not contain, it will 0.
+    If that bit contains obstacle, it will 1,
+    else if that bit contains mud, it will 2,
+    if does not contain anything, it will 0.
      */
-    private Boolean[][] bitmap;
+    private char[][] bitmap;
+
+    // background grass
+    private Graphics2D grass;
 
 
     // Map manager for Singleton Pattern, unique for all levels.
@@ -39,9 +40,9 @@ public class MapManager {
        the map difficulty differentiate according to level */
     private MapManager(int level) {
         // construct Map.MapManager
-        obstacles = new ArrayList<>();
         distance = setDistance(level);
-        bitmap = new Boolean[WIDTH][distance];
+        bitmap = new char[WIDTH][distance];
+
     }
 
     /*Initialize the object as singleton pattern.
@@ -55,9 +56,21 @@ public class MapManager {
         return mapManagerInstance;
     }
 
+    private void generateMap() {
+
+    }
+
+    private int getObstacleNumber() {
+        return distance * 2;
+    }
+
+    private int getMudNumber() {
+        return distance / 10;
+    }
+
     // Returns the number of obstacles left in the obstacles ArrayList.
     public int obstacleLeft() {
-        return obstacles.size();
+        return 0;
     }
 
     // Returns the mapmInstance.
@@ -68,6 +81,18 @@ public class MapManager {
     /* set the distance of the map according to level
        return the distance */
     private int setDistance(int level) {
-        return 0;
+        if (level < 20) {   // easy
+            distance = 20;
+        }
+        else if (level < 50) {  // moderate
+            distance = 50;
+        }
+        else if (level < 100) { // hard
+            distance = 100;
+        }
+        else {  // legacy
+            distance = 200;
+        }
+        return distance;
     }
 }
