@@ -1,7 +1,7 @@
 package Map;
 
-import java.awt.*;
-import java.util.ArrayList;
+
+import java.util.Arrays;
 
 /**
  * Created by boranyildirim on 21.04.2017.
@@ -9,13 +9,17 @@ import java.util.ArrayList;
 
 public class MapManager {
 
+
+    public static void main (String [] args) {
+        MapManager map = init(20);
+    }
+
     // attributes ----------
 
-    // constant for width and height of the bitmap
-    private final int WIDTH = 100;
+    private static final int WIDTH = 21;
 
     // length of the map of the level
-    private int distance;
+    private static int distance;
 
     /*
     Store the bits of the coordinates of map.
@@ -23,10 +27,7 @@ public class MapManager {
     else if that bit contains mud, it will 2,
     if does not contain anything, it will 0.
      */
-    private char[][] bitmap;
-
-    // background grass
-    private Graphics2D grass;
+    private static byte[][] bitmap;
 
 
     // Map manager for Singleton Pattern, unique for all levels.
@@ -41,57 +42,61 @@ public class MapManager {
     private MapManager(int level) {
         // construct Map.MapManager
         distance = setDistance(level);
-        bitmap = new char[WIDTH][distance];
-
+        bitmap = new byte[distance][WIDTH];
+        generateMap();
     }
 
     /*Initialize the object as singleton pattern.
     Check whether the mapManagerInstance is null or not before the creation of new object. */
     // @param level = level of the current level,
     // the map difficulty differentiate according to level
-    public MapManager init(int level) {
+    public static MapManager init(int level) {
         if (mapManagerInstance == null)
             mapManagerInstance = new MapManager(level);
 
         return mapManagerInstance;
     }
 
-    private void generateMap() {
-
+    private static void generateMap() {
+        for (int i = 0; i < distance; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                System.out.print(bitmap[i][j]);
+            }
+            System.out.println();
+        }
     }
 
+
+    // return the number of obstacles should be in map
     private int getObstacleNumber() {
         return distance * 2;
     }
 
+    // returns the number of muds should be in map
     private int getMudNumber() {
         return distance / 10;
     }
 
-    // Returns the number of obstacles left in the obstacles ArrayList.
-    public int obstacleLeft() {
-        return 0;
-    }
-
     // Returns the mapmInstance.
-    public MapManager getMap() {
-        return mapManagerInstance;
+    public byte[][] getMap() {
+        return bitmap;
     }
 
     /* set the distance of the map according to level
-       return the distance */
+       return the distance
+       NOTE: distance should be divisible by 3*/
     private int setDistance(int level) {
         if (level < 20) {   // easy
-            distance = 20;
+            distance = 21;
         }
         else if (level < 50) {  // moderate
-            distance = 50;
+            distance = 42;
         }
         else if (level < 100) { // hard
-            distance = 100;
+            distance = 84;
         }
         else {  // legacy
-            distance = 200;
+            distance = 168;
         }
         return distance;
     }
