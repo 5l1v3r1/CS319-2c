@@ -1,17 +1,18 @@
 package Map;
 
-
-import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by boranyildirim on 21.04.2017.
+ *
+ * !!!! IMPORTANT: STATIC FUNCTIONS AND VARIABLES WILL BE CHANGED
+ *                 THEY ARE JUST FOR TESTING.
  */
 
 public class MapManager {
 
-
     public static void main (String [] args) {
-        MapManager map = init(20);
+        MapManager map = init(10);
     }
 
     // attributes ----------
@@ -46,10 +47,10 @@ public class MapManager {
         generateMap();
     }
 
-    /*Initialize the object as singleton pattern.
-    Check whether the mapManagerInstance is null or not before the creation of new object. */
-    // @param level = level of the current level,
-    // the map difficulty differentiate according to level
+    /* Initialize the object as singleton pattern.
+       Check whether the mapManagerInstance is null or not before the creation of new object.
+       @param level = level of the current level,
+       the map difficulty differentiate according to level */
     public static MapManager init(int level) {
         if (mapManagerInstance == null)
             mapManagerInstance = new MapManager(level);
@@ -58,6 +59,13 @@ public class MapManager {
     }
 
     private static void generateMap() {
+
+        // fill the bitmap with mud
+        addToMap((byte) 1, getObstacleNumber());
+
+        // fill the bitmap with mud
+        addToMap((byte) 2, getMudNumber());
+
         for (int i = 0; i < distance; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 System.out.print(bitmap[i][j]);
@@ -67,13 +75,32 @@ public class MapManager {
     }
 
 
+    //Fill the array for adding a nonzero entry to bitmap
+    private static void addToMap(byte type, int num) {
+        // fill the bitmap
+        for (int i = 0; i < num; i++) {
+            // generate 2 random index for placing a nonzero entry
+            int randX = ThreadLocalRandom.current().nextInt(0, distance);   // 0 to distance random
+            int randY = ThreadLocalRandom.current().nextInt(0, WIDTH);      // 0 to WIDTH random
+
+            // if the index is empty then fill it with @type
+            if (bitmap[randX][randY] == 0)
+                bitmap[randX][randY] = type;
+            else {
+                // the index is already filled, run loop one more time
+                i--;
+            }
+        }
+    }
+
+
     // return the number of obstacles should be in map
-    private int getObstacleNumber() {
-        return distance * 2;
+    private static int getObstacleNumber() {
+        return distance * 3;
     }
 
     // returns the number of muds should be in map
-    private int getMudNumber() {
+    private static int getMudNumber() {
         return distance / 10;
     }
 
