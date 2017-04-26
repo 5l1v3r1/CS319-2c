@@ -146,20 +146,19 @@ public class MapManager {
     }
 
     /* set the distance of the map according to level
-       return the distance
-       NOTE: distance should be divisible by 3*/
+       return the distance */
     private int setDistance(int level) {
         if (level < 20) {   // easy
-            distance = 21;
+            distance = 30;
         }
         else if (level < 50) {  // moderate
-            distance = 42;
+            distance = 60;
         }
         else if (level < 100) { // hard
-            distance = 84;
+            distance = 90;
         }
         else {  // legacy
-            distance = 168;
+            distance = 150;
         }
         return distance;
     }
