@@ -10,7 +10,7 @@ import java.net.URL;
  */
 public class DataManager {
 
-    private static int levels;
+    private static int unLevels;
     private int score;
     private final String[] highScores = new String[10];
     public String [] settings;
@@ -22,6 +22,7 @@ public class DataManager {
         test.saveHighScore(32,10);
         test.saveHighScore(54,10);
         test.saveHighScore(15,2);
+        test.saveHighScore(51,1);
         String [] abc = test.getHighScores();
         for(int i = 0; i<10; i++){
             System.out.println(abc[i]);
@@ -50,7 +51,7 @@ public class DataManager {
             }
 
         score = 0;
-        levels = 0; //Number of unlocked level
+        unLevels = 1; //Number of unlocked level
 
     }
 
@@ -62,7 +63,7 @@ public class DataManager {
 
     //unlockLevel
     public void unlockLevel(){
-        levels++;
+        unLevels++;
     }//end of unlocklevel
 
     //getHighScores
@@ -92,15 +93,12 @@ public class DataManager {
     }//end of saveHighScore
 
     public void updateFile(){
-        FileWriter writer = null;
-        try {
-            writer = new FileWriter(scorefile, true);
-            for(int i= 0; i<10 ; i++){
-                String temp = highScores[i] + "\n";
-                writer.write(temp.toCharArray());
-            }
+        try{
+            PrintWriter writer = new PrintWriter("highscores.txt", "UTF-8");
+            for(int i =0; i<10; i++)
+                writer.println(highScores[i]);
             writer.close();
-        } catch (IOException e) {
+        }catch (IOException e){
             e.printStackTrace();
         }
 
