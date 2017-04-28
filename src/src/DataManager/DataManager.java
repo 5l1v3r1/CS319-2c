@@ -1,6 +1,5 @@
 package DataManager;
 
-import javax.swing.ImageIcon;
 import java.io.*;
 import java.util.Scanner;
 import java.net.URL;
