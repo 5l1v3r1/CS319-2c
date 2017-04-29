@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -149,6 +151,10 @@ public class DribbleandScore extends Application {
         
         
         */
+        Rectangle settingsRec= new Rectangle(440,290);
+        Rectangle outerRec3= new Rectangle(450, 300);
+        settingsRec.setFill(Color.BEIGE);
+        outerRec3.setFill(Color.BLACK);
         Button settingsToMainBtn=new Button();
         settingsToMainBtn.setText("Go Back to Main Menu");
         settingsToMainBtn.setLayoutX(350);
@@ -158,30 +164,88 @@ public class DribbleandScore extends Application {
         
         final ToggleGroup skins = new ToggleGroup();
         RadioButton skin1 = new RadioButton();
-        
+       
         skin1.setText("Skin 1");
+        skin1.setSelected(true);
         skin1.setToggleGroup(skins);
-        skin1.setLayoutX(200);
-        skin1.setLayoutY(300);
+        skin1.setLayoutX(300);
+        skin1.setLayoutY(200);
         RadioButton skin2 = new RadioButton();
-        skin2.setLayoutX(270);
-        skin2.setLayoutY(300);
+        
         skin2.setText("Skin 2");
         skin2.setToggleGroup(skins);
+        skin2.setLayoutX(370);
+        skin2.setLayoutY(200);
         
+        //control Selection
+        final ToggleGroup controller = new ToggleGroup();
+        
+        RadioButton arrows = new RadioButton();
+       
+        arrows.setText("Arrows");
+        arrows.setToggleGroup(controller);
+        arrows.setSelected(true);
+        arrows.setLayoutX(300);
+        arrows.setLayoutY(230);
+        
+        RadioButton wasd = new RadioButton();
+       
+        wasd.setText("WASD buttons");
+        wasd.setToggleGroup(controller);
+        wasd.setLayoutX(370);
+        wasd.setLayoutY(230);
         
         Button resetHSBtn = new Button();
-        resetHSBtn.setText("Click here to delete the High Scores");
-        resetHSBtn.setLayoutX(350);
+        resetHSBtn.setText("Reset High Scores");
         resetHSBtn.setLayoutY(400);
+        resetHSBtn.setLayoutX(350);
+        
+        //1 or 2 player
+        final ToggleGroup singleMulti = new ToggleGroup();
+        
+        RadioButton onePlayer = new RadioButton();
+       
+        onePlayer.setText("Single Player");
+        onePlayer.setToggleGroup(singleMulti);
+        onePlayer.setSelected(true);
+        onePlayer.setLayoutX(300);
+        onePlayer.setLayoutY(260);
+        
+        RadioButton twoPlayer = new RadioButton();
+       
+        twoPlayer.setText("Multi Player");
+        twoPlayer.setToggleGroup(singleMulti);
+        twoPlayer.setLayoutX(400);
+        twoPlayer.setLayoutY(260);
         
         
-        
+        StackPane settingsPane = new StackPane();
+        settingsPane.setLayoutX(200);
+        settingsPane.setLayoutY(150);
+        settingsPane.setMinSize(450, 300);
+        settingsPane.getChildren().addAll(outerRec3,settingsRec,resetHSBtn);
         /* SETTINGS PART ABOVE!! 
-        
+        What will be in settings:
+        Choose character skin:
+        Choose controllers:
+        Choose 1-2 players:
+        Reset High Score
         */
-        
+        //high score part
+       Button HStoMainBtn = new Button("Return to Main Menu");
+       HStoMainBtn.setLayoutX(350);
+       HStoMainBtn.setLayoutY(500);
+       HStoMainBtn.setOnAction((event) -> window.setScene(mainMenu));
+       TableView HStable = new TableView();
+       HStable.setEditable(false);
+       TableColumn nameHS = new TableColumn("Name");
+       TableColumn scoreHS = new TableColumn("Score");
+       HStable.setLayoutX(300);
+       HStable.setLayoutY(70);
+       //getHsFromData Manager and add. 
+       HStable.getColumns().addAll(nameHS,scoreHS);
         //below are scenes
+        
         
         Pane menuLayout = new Pane();
         menuLayout.getChildren().addAll(background,playGameBtn, settingsBtn, infoBtn, highScoresBtn, creditsBtn);
@@ -204,8 +268,13 @@ public class DribbleandScore extends Application {
         credits = new Scene(creditsLayout,800,600);
         
         Pane settingsLayout = new Pane();
-        settingsLayout.getChildren().addAll(background5,skin1,skin2,resetHSBtn,settingsToMainBtn);
-        settings = new Scene(settingsLayout);        
+        settingsLayout.getChildren().addAll(background5,settingsPane,resetHSBtn,settingsToMainBtn,skin1,skin2,arrows,wasd,onePlayer,twoPlayer);
+        settings = new Scene(settingsLayout);
+
+        Pane highScoreLayout = new Pane();
+        highScoreLayout.getChildren().addAll(background6,HStoMainBtn,HStable);
+        highScores = new Scene(highScoreLayout);
+        
         window.setScene(mainMenu);
         window.setTitle("Dribble & Score!");
         window.show();
