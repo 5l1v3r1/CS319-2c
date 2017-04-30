@@ -1,0 +1,6 @@
+image1.png
+up
+down 
+right 
+left
+0
