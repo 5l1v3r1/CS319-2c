@@ -1,4 +1,4 @@
-package Map;
+package map;
 
 import utils.GameType;
 
@@ -119,7 +119,7 @@ public class MapManager {
             int randX = ThreadLocalRandom.current().nextInt(0, distance);   // 0 to distance random
             int randY = ThreadLocalRandom.current().nextInt(0, width);      // 0 to SP_WIDTH random
 
-            // if the index is empty then fill it with @type
+            // if the indetx is empty then fill it with @type
             if (bitmap[randX][randY] == 0)
                 bitmap[randX][randY] = type;
             else {
