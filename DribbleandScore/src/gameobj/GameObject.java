@@ -1,5 +1,4 @@
-package application;
-
+package gameobj;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 

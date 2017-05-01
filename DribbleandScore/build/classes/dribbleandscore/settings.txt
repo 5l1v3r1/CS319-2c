@@ -1,6 +1,0 @@
-../images/image2.png
-up
-down 
-right 
-left
-1
