@@ -32,12 +32,26 @@ public class ShootEngine extends Application {
     private Stage window;
     private Scene start,shooting,end;
     private Rectangle directionBarRec,powerBarRec;
+    private ImageView goalKeeper,goal;
     private ImageView ball;
     @Override
     public void start(Stage primaryStage)
     {
        window = primaryStage;
        ball= new ImageView(new Image(ShootEngine.class.getResourceAsStream("images/ball.png")));
+       goalKeeper = new ImageView(new Image(ShootEngine.class.getResourceAsStream("images/goalKeeper.png")));
+       goal = new ImageView(new Image(ShootEngine.class.getResourceAsStream("images/goal.png")));
+       
+       goal.setFitHeight(90);
+       goal.setFitWidth(300);
+       goal.setLayoutX(280);
+       goal.setLayoutY(30);
+       
+       goalKeeper.setFitHeight(60);
+       goalKeeper.setFitWidth(60);
+       goalKeeper.setLayoutX(400);
+       goalKeeper.setLayoutY(60);
+       
        ball.setFitHeight(40);
        ball.setFitWidth(40);
        ball.setLayoutX(400);
@@ -78,23 +92,30 @@ public class ShootEngine extends Application {
        
       
     
-       Pane initialLayout = new Pane();
-       initialLayout.getChildren().addAll(ball,directionBarPane,powerBarPane);
-       start = new Scene(initialLayout,800,600);
+        Pane initialLayout = new Pane();
+        initialLayout.getChildren().addAll(ball,goal,goalKeeper,directionBarPane,powerBarPane);
+        start = new Scene(initialLayout,800,600);
        
-       window.setScene(start);
-       window.setTitle("Dribble and Score");
-       window.show();
-       Timeline direction = new Timeline(new KeyFrame(
+        window.setScene(start);
+        window.setTitle("Dribble and Score");
+        window.show();
+        
+        Timeline direction = new Timeline(new KeyFrame(
         Duration.millis(50),
-        ae -> doSomething(directionBarRec)));
+        ae -> barMovement(directionBarRec)));
         direction.setCycleCount(Animation.INDEFINITE);
         
         direction.play();
-       Timeline power = new Timeline(new KeyFrame(
-        Duration.millis(50),
-        ae -> doSomething(powerBarRec)));
+        
+        Timeline power = new Timeline(new KeyFrame(
+        Duration.millis(40),
+        ae -> barMovement(powerBarRec)));
         power.setCycleCount(Animation.INDEFINITE);
+        
+        Timeline shooter = new Timeline(new KeyFrame(
+        Duration.millis(40),
+        e -> shootAnimation(ball)));
+        shooter.setCycleCount(Animation.INDEFINITE);
         
         
         start.setOnMouseClicked((event) -> {
@@ -106,27 +127,57 @@ public class ShootEngine extends Application {
            power.play();
        }
        else if(mouseCount==2)
+       {
            power.stop();
-      
-       });
-       
-       
-       
+           shooter.play();
+       }
+       });  
     }
    
-    public void doSomething(Rectangle barRec){
-        
+    public void barMovement(Rectangle barRec){
+         System.out.println(barRec.getWidth());
         if(!isEmpty)
         { 
-            barRec.setWidth(barRec.getWidth()-10);
-            if(barRec.getWidth()==0)
+            if(barRec.getWidth()<=0)
                 isEmpty = true;
+            else barRec.setWidth(barRec.getWidth()-10);
         }
         else
         {
-            barRec.setWidth(barRec.getWidth()+10);
-                if(barRec.getWidth()==160)
-                    isEmpty=false;
+            if(barRec.getWidth()>=160)
+                isEmpty=false;
+            
+            else
+                barRec.setWidth(barRec.getWidth()+10);
+                
         }    
-        } 
+    }
+    int shootDirection,directionCounter=0,powerTime=0;
+    double shootPower;
+    public void shootAnimation(ImageView ball){
+        shootPower=getShootPower(powerTime);
+        shootDirection=getShootDirection();
+        System.out.println(shootPower);
+        ball.setLayoutY(ball.getLayoutY()-shootPower);
+        if(shootPower>1 ) //If no power, stop going right or left.
+            ball.setLayoutX(ball.getLayoutX()+shootDirection);
+        powerTime++;
+    }
+    double getShootPower(double time)
+    {
+        int power=(int)powerBarRec.getWidth()/10;
+        if(power>0)
+                power-=time/10;
+        if(power<0)
+            power=0;
+        return power;
+    }
+    int getShootDirection(){
+        int direction = (int)directionBarRec.getWidth();
+        direction = direction - 80;
+        direction/=5;
+        return direction;
+    }
 }
+    
+
