@@ -7,8 +7,6 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * Created by boranyildirim on 21.04.2017.
  *
- * !!!! IMPORTANT: STATIC FUNCTIONS AND VARIABLES WILL BE CHANGED
- *                 THEY ARE JUST FOR TESTING.
  *
  *  The map is generated 3 way for single player [7][7][7]
  *  and for multiplayer 5 ways [7][7][7][7][7]
@@ -16,33 +14,25 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MapManager {
 
-    public static void main (String [] args) {
-        MapManager map = init(GameType.SINGLEPLAYER,10);
-
-        if (gameType == GameType.SINGLEPLAYER)
-            printMap(SP_WIDTH);
-        else
-            printMap(MP_WIDTTH);
-    }
-
     // attributes ----------
 
     // constant WIDTH for single player map.
-    private static final int SP_WIDTH = 21;
+    private final int SP_WIDTH = 21;
 
     // constant WIDTH for multi player map.
-    private static final int MP_WIDTTH = 35;
+    private final int MP_WIDTH = 35;
 
     // length of the map of the level
-    private static int distance;
+    private int distance;
 
     /*
     Store the bits of the coordinates of map.
     If that bit contains obstacle, it will 1,
     else if that bit contains mud, it will 2,
+    else if that bit contains bonus, it will 3,
     if does not contain anything, it will 0.
      */
-    private static byte[][] bitmap;
+    private byte[][] bitmap;
 
 
     // Map manager for Singleton Pattern, unique for all levels.
@@ -54,6 +44,7 @@ public class MapManager {
     // functions ----------
 
     /* private constructor for Singleton Pattern
+       @param gameType = current game type
        @param level = level of the current level,
        the map difficulty differentiate according to level */
     private MapManager(GameType gameType, int level) {
@@ -66,27 +57,32 @@ public class MapManager {
             bitmap = new byte[distance][SP_WIDTH];
         }
         else {
-            bitmap = new byte[distance][MP_WIDTTH];
+            bitmap = new byte[distance][MP_WIDTH];
         }
 
-        generateMap();
+        generateMap(level);
     }
 
 
     /* Initialize the object as singleton pattern.
-       Check whether the mapManagerInstance is null or not before the creation of new object.
+       Check whether the mapManagerInstance is null or not and gameType is same or not before the creation of new object.
+       @param gameType = current game type,
        @param level = level of the current level,
        the map difficulty differentiate according to level */
     public static MapManager init(GameType gameType, int level) {
         if (mapManagerInstance == null)
             mapManagerInstance = new MapManager(gameType, level);
 
+        if (MapManager.gameType != gameType) {
+            mapManagerInstance = new MapManager(gameType, level);
+        }
+
         return mapManagerInstance;
     }
 
 
     // @TEST print the map
-    private static void printMap(int width) {
+    public void printMap(int width) {
         for (int i = 0; i < distance; i++) {
             for (int j = 0; j < width; j++) {
                 System.out.print(bitmap[i][j]);
@@ -99,20 +95,26 @@ public class MapManager {
 
 
     // fill the map with obstacles(1) and muds(2)
-    private static void generateMap() {
+    // when the level is passed call the generate map for new map
+    public void generateMap(int level) {
+        // set new distance for new level
+        distance = setDistance(level);
+
         if (gameType == GameType.SINGLEPLAYER) {
             addToMap((byte) 1, getObstacleNumber(), SP_WIDTH);
             addToMap((byte) 2, getMudNumber(), SP_WIDTH);
+            addToMap((byte) 3, getBonusNumber(), SP_WIDTH);
         }
         else {
-            addToMap((byte) 1, getObstacleNumber(), MP_WIDTTH);
-            addToMap((byte) 2, getMudNumber(), MP_WIDTTH);
+            addToMap((byte) 1, getObstacleNumber(), MP_WIDTH);
+            addToMap((byte) 2, getMudNumber(), MP_WIDTH);
+            addToMap((byte) 3, getBonusNumber(), MP_WIDTH);
         }
     }
 
 
     //Fill the array for adding a nonzero entry to bitmap
-    private static void addToMap(byte type, int num, int width) {
+    private void addToMap(byte type, int num, int width) {
         // fill the bitmap
         for (int i = 0; i < num; i++) {
             // generate 2 random index for placing a nonzero entry
@@ -131,13 +133,18 @@ public class MapManager {
 
 
     // return the number of obstacles should be in map
-    private static int getObstacleNumber() {
+    private int getObstacleNumber() {
         return distance * 3;
     }
 
     // returns the number of muds should be in map
-    private static int getMudNumber() {
-        return distance / 10;
+    private int getMudNumber() {
+        return distance;
+    }
+
+    // returns the number of bonusus should be in map
+    private int getBonusNumber() {
+        return distance;
     }
 
     // Returns the mapmInstance.
