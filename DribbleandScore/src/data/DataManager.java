@@ -22,57 +22,16 @@ import javax.swing.ImageIcon;
 public class DataManager {
     private static ImageIcon characterImage;
     private static int unLevels;
-    private int score;
     private String[] highScores;
     private String[] settings;
     private URL url,url2;
     private File scorefile,configFile;
-    GameType gameType;
-
-    public static void main(String[] args) {
-        //Testing
-        DataManager test = new DataManager();
-        test.saveHighScore(32,10);
-        test.saveHighScore(54,10);
-        test.saveHighScore(15,2);
-        test.saveHighScore(51,1);
-        test.saveHighScore(32,1);
-
-        String [] abc = test.getHighScores();
-        for(int i = 0; i < 10; i++){
-            System.out.println(abc[i]);
-        }
-        /*ABOUT SETTING.TXT
-        FIRST LINE INDICATES CHARACTER IMAGE NAME
-        2ND,3RD,4TH,5TH INDICATES WASD AND ARROW KEY ADJUSTMENT(NOT COMPLETED)
-        LAST LINE INDICATES SINGLE PLAYER OR MULTIPLAYER OPTION 0 = SINGLE PLAYER, 1 IS MULTIPLAYER
-        */
-
-        System.out.println("Settings");
-        String [] aSet = test.getSettingsData();
-        for (int x = 0; x < 6 ; x++)
-            System.out.println(aSet[x]);
-
-        System.out.println("Game Type Test");
-
-        System.out.println("Game is: " + test.getGameType());
-
-        System.out.println("Change game type test");
-        GameType game = GameType.MULTIPLAYER;
-        test.setGameType(game);
-        System.out.println(test.getGameType());
-
-        test.setPlayerImage("image2.png");
-        System.out.println(characterImage.getDescription());
-
-
-    }//end of main
 
     //Data Manager
     public DataManager() {
 
         highScores = new String[10];
-        settings = new String[6];
+        settings = new String[3];
 
         //open and set the file for highscore
         url = getClass().getResource("highscores.txt");
@@ -89,7 +48,7 @@ public class DataManager {
         url2 = getClass().getResource("settings.txt");
         configFile = new File(url2.getPath());
         try (Scanner confScanner = new Scanner(configFile)) {
-            for (int j = 0; j < 6; j++) {
+            for (int j = 0; j < 3; j++) {
                 if (confScanner.hasNext())
                     settings[j] = confScanner.nextLine();
             }
@@ -98,9 +57,7 @@ public class DataManager {
         }
 
         characterImage = new ImageIcon(settings[0]);
-        gameType = GameType.SINGLEPLAYER;
-        score = 0;
-        unLevels = 1; //Number of unlocked level
+        unLevels = Integer.parseInt(settings[2]); //Number of unlocked level
 
     }
 
@@ -113,6 +70,7 @@ public class DataManager {
     //unlockLevel
     public void unlockLevel(){
         unLevels++;
+        settings[2] = Integer.toString(unLevels);
     }//end of unlocklevel
 
     //getHighScores
@@ -151,35 +109,16 @@ public class DataManager {
 
     }//end of update file
 
-    //GameType
-    public GameType getGameType(){
-        if(Integer.parseInt(settings[5]) == 0)
-            return GameType.SINGLEPLAYER;
-        else
-            return GameType.MULTIPLAYER;
-
-    }//end of GameType
-
     public void updateSettings(){
         try{
             PrintWriter writer = new PrintWriter(configFile, "UTF-8");
-            for (int i = 0; i<6; i++)
+            for (int i = 0; i<3; i++)
                 writer.println(settings[i]);
             writer.close();
         }catch (IOException e){
             e.printStackTrace();
         }
     }//end of updateSettings
-
-    //setGameType
-    public void setGameType(GameType gameType){
-
-        if (gameType == GameType.SINGLEPLAYER)
-            settings[5] = "0";
-        else
-            settings[5] = "1";
-        updateSettings();
-    }//end of setGameType
 
     //setPlayerImage
     public void setPlayerImage(String imageName) {
@@ -197,6 +136,6 @@ public class DataManager {
     //reset HighScore
     public void resetHighScore(){
         for(int i = 0; i < 10; i++)
-        highScores[i] = 0 + "," + (i+1);
+            highScores[i] = 0 + "," + (i+1);
     }//end of resetHighScore
 }//end of DataManager
