@@ -79,14 +79,14 @@ public class DataManager {
     }//end of getHighScores
 
     //SaveHighScore
-    public void saveHighScore(int score, int level){
+    public void saveHighScore(int score, String name){
         try (Scanner fileScanner = new Scanner(scorefile)) {
             for (int i = 0; i < 10; i++) {
                 String data = fileScanner.nextLine();
                 String[] parts = data.split(",");
-                int levelScores = Integer.parseInt(parts[i]);
+                int levelScores = Integer.parseInt(parts[0]);
                 if (levelScores < score) {
-                    highScores[level - 1] = score + "," + level;
+                    highScores[level - 1] = score + "," + name;
                     this.updateFile();
                     break;
                 }
@@ -136,6 +136,7 @@ public class DataManager {
     //reset HighScore
     public void resetHighScore(){
         for(int i = 0; i < 10; i++)
-            highScores[i] = 0 + "," + (i+1);
+            highScores[i] = 0 + "," + 0;
+        this.updateFile();
     }//end of resetHighScore
 }//end of DataManager
