@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 import map.MapManager;
 import utils.GameType;
 
+import static javafx.application.Application.launch;
+
 /**
  * Created by boranyildirim on 3.05.2017.
  */
@@ -49,7 +51,10 @@ public class GameEngine {
         dataManager = new DataManager();
         settings = dataManager.getSettingsData();
 
+        this.gameType = gameType;
+
         // init map instance
+        // settings[2] = current level of the game
         map = MapManager.init(gameType, Integer.parseInt(settings[2]));
 
         /*
@@ -57,7 +62,7 @@ public class GameEngine {
         System.out.println();
         for (int x = 0; x < 3 ; x++)
             System.out.println(settings[x]);*/
-        placeObjectsToMap();
+        runMap();
     }
 
     /* Initialize the object as singleton pattern.
@@ -71,7 +76,7 @@ public class GameEngine {
         return engine;
     }
 
-    private void placeObjectsToMap() {
+    private void runMap() {
         byte[][] bitmap = map.getMap();
 
         int i_len = bitmap.length;
@@ -87,25 +92,31 @@ public class GameEngine {
             end = t + 1000;     // add 1 second to current time
             // run 1 second and show grass in every where
             while (System.currentTimeMillis() < end) {
-                //draw grass
+                // move the current obstacles before sending new ones
             }
 
             // if the first 7bits include a nonzero then draw it resume like this. 7 7 7
-            // if one object is drawed it must jump to next 7.
+            // if one object is drawn it must jump to next 7.
             // check in single player for if 2 of them is obstacle then don't look 3rd
             // check in multi player for if 3 of them is obstacle then don't look 4th and 5th
+            byte lineCount = 0;
             for (int j = 0; j < j_len; j++) {
-                if (bitmap[i][j] == 1) {
-                    // draw obstacle
-                }
-                else if (bitmap[i][j] == 2) {
-                    // draw mud
-                }
-                else if (bitmap[i][j] == 3) {
-                    // draw bonus
+                if (lineCount != (j_len / 2 + 1)) {
+                    if (bitmap[i][j] == 1) {
+                        // draw obstacle
+                        lineCount++;
+                        j = j + (7 - j % 7);
+                    } else if (bitmap[i][j] == 2) {
+                        // draw mud
+                        lineCount++;
+                        j = j + (7 - j % 7);
+                    } else if (bitmap[i][j] == 3) {
+                        // draw bonus
+                        lineCount++;
+                        j = j + (7 - j % 7);
+                    }
                 }
             }
         }
-
     }
 }

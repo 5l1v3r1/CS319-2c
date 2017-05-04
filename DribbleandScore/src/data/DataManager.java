@@ -9,7 +9,6 @@ package data;
  *
  * @author batikan
  */
-import utils.GameType;
 import java.io.*;
 import java.util.Scanner;
 import java.net.URL;
@@ -45,6 +44,9 @@ public class DataManager {
             e.printStackTrace();
         }
         //file for settings
+        // line 1: image
+        // line 2: keyboard layout
+        // line 3: level
         url2 = getClass().getResource("settings.txt");
         configFile = new File(url2.getPath());
         try (Scanner confScanner = new Scanner(configFile)) {
@@ -86,7 +88,7 @@ public class DataManager {
                 String[] parts = data.split(",");
                 int levelScores = Integer.parseInt(parts[0]);
                 if (levelScores < score) {
-                    highScores[level - 1] = score + "," + name;
+                    highScores[i] = score + "," + name;
                     this.updateFile();
                     break;
                 }
