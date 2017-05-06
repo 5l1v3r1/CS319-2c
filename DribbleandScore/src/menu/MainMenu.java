@@ -37,7 +37,11 @@ public class MainMenu extends Application {
     private DataManager dataManager;
     private GameEngine gameEngine;
     private MediaPlayer mediaPlayer;
+    public static int levelScore=0;
     
+    public static int getScore(){
+        return levelScore;
+    }
     @Override
     public void start(Stage primaryStage) {
         game = new Stage();
@@ -112,7 +116,8 @@ public class MainMenu extends Application {
             levels[i].setText("Level" + (i+1));
             levels[i].setLayoutX(posX);
             levels[i].setLayoutY(posY);
-            levels[i].setOnAction((event) -> startGame());
+            final int level = i+1;
+            levels[i].setOnAction((event) -> startGame(level));
             if((i+1)%12==0)
             {
                 posY+=30;
@@ -334,7 +339,9 @@ public class MainMenu extends Application {
     }
     
  
-    public void startGame(){
+    public void startGame(int val){
+    levelScore = val*300;
+    System.out.println(levelScore);
     window.close();
     mediaPlayer.stop();
     new GameEngine().start(game);
