@@ -43,7 +43,7 @@ public class GameEngine extends Application{
     private ImageView obstacleView; // could be more than 1
     private ImageView bonus;   //could be more than 1
     private ImageView background;
-    private Timeline changeDirection, moveObstacle,scoreProgress;
+    private Timeline changeDirection, moveObstacle,scoreProgress,generate;
     private KeyCode keyPress;
     private ImageView referee;
     private Pane gameLayout;
@@ -74,9 +74,14 @@ public class GameEngine extends Application{
         gameCharacter.setFitHeight(210);
         gameCharacter.setFitWidth(120);
 
-        list = new ArrayList<>();
+       
         runMap();
-
+        generate = new Timeline(new KeyFrame(
+                Duration.millis(2000),
+                ae -> genObstacle()));
+        generate.setCycleCount(Animation.INDEFINITE);
+        generate.play();
+        
         scoreProgress = new Timeline(new KeyFrame(
                 Duration.millis(50),
                 ae -> scoreChange(scoreCounter)));
@@ -88,34 +93,18 @@ public class GameEngine extends Application{
                 Duration.millis(50),
                 ae -> changeDir(gameCharacter,direction)));
         changeDirection.setCycleCount(Animation.INDEFINITE);
-
+        
 
         gameLayout = new Pane();
         gameLayout.getChildren().addAll(background,gameCharacter);
         game = new Scene(gameLayout,800,600);
-
-        for (int i = 0; i < list.size(); i++) {
-
-            long t = System.currentTimeMillis(); // get current time
-            long end = t + 1000;
-
-            while (System.currentTimeMillis() < end) {
-                // move the current obstacles before sending new ones
-                moveObstacle = new Timeline(new KeyFrame(
+         moveObstacle = new Timeline(new KeyFrame(
                         Duration.millis(50),
                         ae -> moveObst()));
                 moveObstacle.setCycleCount(Animation.INDEFINITE);
-                moveObstacle.play();
-
-            }
-
-            if (i % 3 == 1)
-                genObst(list.get(i), 40);
-            else if (i % 3 == 2)
-                genObst(list.get(i), 200);
-            else if (i % 3 == 0)
-                genObst(list.get(i), 360);
-        }
+        boolean firsttime=true;        
+        moveObstacle.play();
+        
 
         game.setOnKeyPressed((KeyEvent e) -> {
                     KeyCode keyPress = e.getCode();
@@ -153,14 +142,31 @@ public class GameEngine extends Application{
         obstacle.getImageView().setLayoutY(40);
         gameLayout.getChildren().add(obstacle.getImageView());
     }
-
+    private boolean firsttime=true;
+    private int i=0;
+    public void genObstacle(){
+            if (i % 3 == 1)
+                genObst(list.get(i), 40);
+            else if (i % 3 == 2)
+                genObst(list.get(i), 200);
+            else if (i % 3 == 0)
+                genObst(list.get(i), 360);
+            if(firsttime)
+            {    
+                    firsttime=false;
+            }
+            i++;
+        }
+    
+    
     public void moveObst()
     {
         for(Obstacle obst : list)
         {
             Label label1= new Label();
-            if(obst.getImageView().getLayoutY()>=-40)
-                obst.getImageView().setLayoutY(obst.getImageView().getLayoutY()+2);
+            if(obst.getImageView()!=null)
+            {    if(obst.getImageView().getLayoutY()>=-40)
+                    obst.getImageView().setLayoutY(obst.getImageView().getLayoutY()+2);
             if(gameCharacter.getBoundsInParent().intersects(obst.getImageView().getBoundsInParent()))
             {
                 if(obst.getType()==1)
@@ -175,13 +181,15 @@ public class GameEngine extends Application{
                 }
                 else if(obst.getType()==3)
                     window.hide();
-
-                list.remove(obst);
+                obst.getImageView().setImage(null);
+               
             }
+            }
+         }
 // else
             // quitGame();
-        }
     }
+    
 
     private int cards=0;
     public void showCard()
@@ -230,6 +238,11 @@ public class GameEngine extends Application{
         }
 
         scoreCounter++;
+         if(scoreCounter == 100)
+         {
+             window.close();
+             new ShootEngine().start(shootingStage);
+         }
     }
     public void decreaseScore(int score)
     {
@@ -241,7 +254,7 @@ public class GameEngine extends Application{
 
         int i_len = bitmap.length;
         int j_len = bitmap[1].length;
-
+         list = new ArrayList<>();
         // this two variables are for waiting a second to draw one more row
         // in the for loop you can see what happens
         long t, end;
