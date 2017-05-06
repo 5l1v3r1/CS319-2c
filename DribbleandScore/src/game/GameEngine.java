@@ -23,7 +23,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import map.MapManager;
 import utils.GameType;
-
+import menu.*;
 
 public class GameEngine extends Application{
 
@@ -32,12 +32,9 @@ public class GameEngine extends Application{
     {
         launch(args);
     }
-    // public GameEngine(GameType gameType){
-    // gameType= this.gameType;
-    // map = MapManager.init(gameType, 2);
-    // }
+    
     private Rectangle card;
-    private Stage window,shootingStage;
+    private Stage window,shootingStage,mainStage;
     private Scene game;
     private ImageView gameCharacter;
     private ImageView obstacleView; // could be more than 1
@@ -52,7 +49,7 @@ public class GameEngine extends Application{
     private ArrayList<Obstacle> list;
     private ArrayList<Obstacle> refereeList;
     private int direction=0;
-
+    
     private MapManager map;
     @Override
     public void start(Stage primaryStage)
@@ -77,7 +74,7 @@ public class GameEngine extends Application{
        
         runMap();
         generate = new Timeline(new KeyFrame(
-                Duration.millis(2000),
+                Duration.millis(500),
                 ae -> genObstacle()));
         generate.setCycleCount(Animation.INDEFINITE);
         generate.play();
@@ -99,7 +96,7 @@ public class GameEngine extends Application{
         gameLayout.getChildren().addAll(background,gameCharacter);
         game = new Scene(gameLayout,800,600);
          moveObstacle = new Timeline(new KeyFrame(
-                        Duration.millis(50),
+                        Duration.millis(10),
                         ae -> moveObst()));
                 moveObstacle.setCycleCount(Animation.INDEFINITE);
         boolean firsttime=true;        
@@ -146,11 +143,11 @@ public class GameEngine extends Application{
     private int i=0;
     public void genObstacle(){
             if (i % 3 == 1)
-                genObst(list.get(i), 40);
+                genObst(list.get(i), (int)(Math.random()*600));
             else if (i % 3 == 2)
-                genObst(list.get(i), 200);
+                genObst(list.get(i), (int)(Math.random()*600));
             else if (i % 3 == 0)
-                genObst(list.get(i), 360);
+                genObst(list.get(i), (int)(Math.random()*600));
             if(firsttime)
             {    
                     firsttime=false;
@@ -170,9 +167,16 @@ public class GameEngine extends Application{
             if(gameCharacter.getBoundsInParent().intersects(obst.getImageView().getBoundsInParent()))
             {
                 if(obst.getType()==1)
-                    decreaseScore(50);
+                {
+                    if(obst.getHit()==false)
+                    {     
+                        decreaseScore(50);
+                        obst.setHit(true);
+                    }
+                }
                 else if(obst.getType()==2)
                 {
+                    System.out.println("lel");
                     if(obst.getHit()==false)
                     {
                         showCard();
@@ -210,10 +214,10 @@ public class GameEngine extends Application{
         if(counter<150)
         {
 
-            if(direction==1)
-                player.setLayoutX(player.getLayoutX()-15);
-            else if(direction==2)
-                player.setLayoutX(player.getLayoutX()+15);
+            if(direction==1 && player.getLayoutX()>= 30)
+                player.setLayoutX(player.getLayoutX()-30);
+            else if(direction==2 && player.getLayoutX()<= 570)
+                player.setLayoutX(player.getLayoutX()+30);
         }
         else
         {
@@ -237,16 +241,21 @@ public class GameEngine extends Application{
             gameLayout.getChildren().add(score);
         }
 
-        scoreCounter++;
-         if(scoreCounter == 100)
+        scoreCounter+=5;
+         if(scoreCounter == 1000)
          {
              window.close();
              new ShootEngine().start(shootingStage);
          }
+         if(scoreCounter < -500)
+         {
+             window.close();
+             new MainMenu().start(mainStage);
+         }
     }
     public void decreaseScore(int score)
     {
-        scoreCounter-=5;
+        scoreCounter-=score;
     }
 
     private void runMap() {
