@@ -22,6 +22,10 @@ import gameobj.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.io.File;
+import data.DataManager;
 
 public class GameEngine extends Application{
 
@@ -178,8 +182,14 @@ public class GameEngine extends Application{
        card.setLayoutY(30);
        card.setFill(Color.YELLOW);
        cards++;
-       if(cards<2)         
+       if(cards<2){         
            gameLayout.getChildren().add(card);
+           //New added
+           Media sound=new Media(new File("src/Sounds/Referee.mp3").toURI().toString());
+           MediaPlayer mediaPlayer=new MediaPlayer(sound);
+           mediaPlayer.play();
+           //ends new added
+       }
        else
          window.hide();
          //quit  
