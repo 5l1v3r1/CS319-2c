@@ -1,6 +1,6 @@
 package gameobj;
 
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class MainCharacter extends GameObject {
@@ -19,7 +19,7 @@ public class MainCharacter extends GameObject {
 	
 	// Constructor for MainCharacter
 	public MainCharacter(
-			Image image,
+			ImageView image,
 			Duration duration,
 			int count,   		int columns,
 			int offsetX, 		int offsetY,

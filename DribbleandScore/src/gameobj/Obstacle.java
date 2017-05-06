@@ -1,21 +1,23 @@
 package gameobj;
 
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class Obstacle extends GameObject {
 	
 	// Properties
 	private int type; // 0 = foo, 1 = Mud, 2 = Referee, 3 = DefensePlayer
-	
+	private boolean hit;
+        public Obstacle(){}
 	public Obstacle(
-			Image image,
+			ImageView image,
 			Duration duration,
 			int count,   		int columns,
 			int offsetX, 		int offsetY,
 			int width,   		int height,
 			int xPosition, 		int yPosition,
-			int type
+			int type,               boolean hit
+                        
 			)
 	{
 		this.image = image;
@@ -29,6 +31,7 @@ public class Obstacle extends GameObject {
 		this.xPosition = xPosition;
 		this.yPosition = yPosition;
 		this.type = type;
+                this.hit=hit;
 	}
 
 	
@@ -40,8 +43,14 @@ public class Obstacle extends GameObject {
 	public int getType() {
 		return type;
 	}
-
-	/**
+        public void setHit(boolean value){
+            this.hit=value;
+        }
+        public boolean getHit()
+        {
+            return hit;
+        }
+                /**
 	 * @param type the type to set
 	 */
 	public void setType(int type) {

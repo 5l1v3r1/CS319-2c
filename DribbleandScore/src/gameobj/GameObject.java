@@ -1,5 +1,6 @@
 package gameobj;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 /* ========
@@ -21,7 +22,7 @@ public abstract class GameObject {
 	protected int columns; 				// the number of columns (how many frames are in one row in the image)
 	protected int offsetX; 				// the offset of the first frame
 	protected int offsetY; 				// the offset of the first frame
-	protected Image image; 				// Image of the object in sprite-sheet form
+	protected ImageView image; 				// Image of the object in sprite-sheet form
 	protected Duration duration;		// the duration of a single cycle (that is how long it should take to go through all frames)
 	
 	
@@ -127,13 +128,13 @@ public abstract class GameObject {
 	/**
 	 * @return the image
 	 */
-	public Image getImage() {
+	public ImageView getImageView() {
 		return image;
 	}
 	/**
 	 * @param image the image to set
 	 */
-	public void setImage(Image image) {
+	public void setImage(ImageView image) {
 		this.image = image;
 	}
 	/**

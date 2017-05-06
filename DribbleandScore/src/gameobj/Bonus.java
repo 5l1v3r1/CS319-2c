@@ -1,6 +1,6 @@
 package gameobj;
 
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 public class Bonus extends GameObject {
@@ -10,8 +10,10 @@ public class Bonus extends GameObject {
 	private int type; // 0 = foo, 1 = Doping, 2 = ExtraLife, 3 = FootballShoe	
 	
 	// Constructor for Bonus
+        public Bonus(){
+        }
 	public Bonus(
-			Image image,
+			ImageView image,
 			Duration duration,
 			int count,   		int columns,
 			int offsetX, 		int offsetY,
