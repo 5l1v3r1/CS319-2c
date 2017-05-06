@@ -1,122 +1,225 @@
+/**
+ *
+ * @author berke
+ */
 package game;
 
-import data.DataManager;
-import gameobj.Bonus;
-import gameobj.MainCharacter;
-import gameobj.Obstacle;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import map.MapManager;
-import utils.GameType;
-
-import static javafx.application.Application.launch;
-
-/**
- * Created by boranyildirim on 3.05.2017.
- */
-public class GameEngine {
-
-    // attributes --------
-
-    //
-    private Obstacle[] obstacleInMap;
-    private boolean collisionHit;
-    private GameType gameType;
-
-    private int level;
-
-    private Image grass;
-
-    private int obstacleLeft;
-
-    private boolean isPaused;
-
-    private DataManager dataManager;
-
-    private Bonus[] bonusInMap;
-
-    private static GameEngine engine;
-
-    private MainCharacter [] characters;
-
-    private MapManager map;
-
-    private String[] settings;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import java.util.ArrayList;
+import gameobj.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 
-    // functions --------
+public class GameEngine extends Application{
 
-    // private constructor for singleton pattern
-    private GameEngine(GameType gameType) {
-        //init data manager and then load the settings to engine
-        dataManager = new DataManager();
-        settings = dataManager.getSettingsData();
-
-        this.gameType = gameType;
-
-        // init map instance
-        // settings[2] = current level of the game
-        map = MapManager.init(gameType, Integer.parseInt(settings[2]));
-
-        /*
-        map.printMap(21);
-        System.out.println();
-        for (int x = 0; x < 3 ; x++)
-            System.out.println(settings[x]);*/
-        runMap();
+    
+    public static void main(String[] args)
+    {
+        launch(args);
+    }
+   // public GameEngine(GameType gameType){
+   // gameType= this.gameType;
+   // map = MapManager.init(gameType, 2);
+   // }
+    private Rectangle card;
+    private Stage window,shootingStage;
+    private Scene game;
+    private ImageView gameCharacter;
+    private ImageView obstacleView; // could be more than 1
+    private ImageView bonus;   //could be more than 1
+    private ImageView background;
+    private Timeline changeDirection, moveObstacle,scoreProgress;
+    private KeyCode keyPress;
+    private ImageView referee;
+    private Pane gameLayout;
+    private Label score;
+    private int scoreCounter=0;
+    private ArrayList<Obstacle> list;
+    private ArrayList<Obstacle> refereeList;
+    private int direction=0;
+    @Override
+    public void start(Stage primaryStage)
+    {
+    score = new Label();
+    refereeList = new ArrayList<>();
+    shootingStage = new Stage();
+    window = primaryStage;
+   
+    background = new ImageView(new Image(GameEngine.class.getResourceAsStream("images/SeBg.jpg")));
+    gameCharacter= new ImageView(new Image(GameEngine.class.getResourceAsStream("images/gameCharacter.png")));
+    obstacleView= new ImageView(new Image(GameEngine.class.getResourceAsStream("images/mud.png")));
+    referee = new ImageView(new Image(GameEngine.class.getResourceAsStream("images/referee.png")));
+    //initial layout for game Character
+    gameCharacter.setLayoutX(350);
+    gameCharacter.setLayoutY(300);
+    //size of gameCharacter
+    gameCharacter.setFitHeight(210);
+    gameCharacter.setFitWidth(120);
+    list = new ArrayList<>();
+    Obstacle bonus = new Obstacle();
+    Obstacle referee = new Obstacle();
+    Obstacle obstacle2= new Obstacle();
+    Obstacle obstacle= new Obstacle();
+    obstacle.setType(1);
+    obstacle2.setType(1);
+    referee.setType(2);
+    list.add(obstacle);
+    list.add(obstacle2);
+    list.add(referee);
+    scoreProgress = new Timeline(new KeyFrame(
+        Duration.millis(50),
+        ae -> scoreChange(scoreCounter)));
+        scoreProgress.setCycleCount(Animation.INDEFINITE);
+    
+    scoreProgress.play();
+    
+    changeDirection = new Timeline(new KeyFrame(
+        Duration.millis(50),
+        ae -> changeDir(gameCharacter,direction)));
+        changeDirection.setCycleCount(Animation.INDEFINITE);
+        
+    moveObstacle = new Timeline(new KeyFrame(
+        Duration.millis(50),
+        ae -> moveObst(obstacle)));
+        moveObstacle.setCycleCount(Animation.INDEFINITE);
+    
+   
+    gameLayout = new Pane();
+    gameLayout.getChildren().addAll(background,gameCharacter);
+    game = new Scene(gameLayout,800,600);
+    genObst(obstacle,40);
+    genObst(obstacle2,200);
+    genObst(referee,300);
+     moveObstacle.play();
+    game.setOnKeyPressed((KeyEvent e) -> {
+        KeyCode keyPress = e.getCode();
+        
+        if(keyPress == KeyCode.LEFT)
+        {   direction=1; 
+            changeDirection.play(); 
+        }
+        
+            
+        else if(keyPress == KeyCode.RIGHT)
+        {    
+            direction=2;
+            changeDirection.play(); 
+        }        
+        
+        }
+        );
+    
+    window.setScene(game);
+    window.setTitle("Dribble and Score!");
+    window.show();
+    
+    }
+    private int counter=0;
+    
+    public void genObst(Obstacle obstacle, int xLoc)
+    {
+      if(obstacle.getType()==1)
+        obstacle.setImage(new ImageView(new Image(GameEngine.class.getResourceAsStream("images/mud.png"))));
+      else if(obstacle.getType()==2)
+        obstacle.setImage(new ImageView(new Image(GameEngine.class.getResourceAsStream("images/referee.png"))));
+        obstacle.getImageView().setFitHeight(70);
+        obstacle.getImageView().setFitWidth(70);
+        obstacle.getImageView().setLayoutX(30+xLoc);
+        obstacle.getImageView().setLayoutY(40);
+        gameLayout.getChildren().add(obstacle.getImageView());    
     }
 
-    /* Initialize the object as singleton pattern.
-       Check whether the GameEngine is null or not before the creation of new object.
-       @param gameType = current game type,
-       @param level = level of the current level */
-    public static GameEngine init(GameType gameType) {
-        if (engine == null)
-            engine = new GameEngine(gameType);
-
-        return engine;
-    }
-
-    private void runMap() {
-        byte[][] bitmap = map.getMap();
-
-        int i_len = bitmap.length;
-        int j_len = bitmap[1].length;
-
-        // this two variables are for waiting a second to draw one more row
-        // in the for loop you can see what happens
-        long t, end;
-
-        for (int i = 0; i < i_len; i++) {
-
-            t = System.currentTimeMillis(); // get current time
-            end = t + 1000;     // add 1 second to current time
-            // run 1 second and show grass in every where
-            while (System.currentTimeMillis() < end) {
-                // move the current obstacles before sending new ones
-            }
-
-            // if the first 7bits include a nonzero then draw it resume like this. 7 7 7
-            // if one object is drawn it must jump to next 7.
-            // check in single player for if 2 of them is obstacle then don't look 3rd
-            // check in multi player for if 3 of them is obstacle then don't look 4th and 5th
-            byte lineCount = 0;
-            for (int j = 0; j < j_len; j++) {
-                if (lineCount != (j_len / 2 + 1)) {
-                    if (bitmap[i][j] == 1) {
-                        // draw obstacle
-                        lineCount++;
-                        j = j + (7 - j % 7);
-                    } else if (bitmap[i][j] == 2) {
-                        // draw mud
-                        lineCount++;
-                        j = j + (7 - j % 7);
-                    } else if (bitmap[i][j] == 3) {
-                        // draw bonus
-                        lineCount++;
-                        j = j + (7 - j % 7);
+    public void moveObst(Obstacle obstacle)
+    {
+        for(Obstacle obst : list)
+        {
+            Label label1= new Label();
+            if(obst.getImageView().getLayoutY()>=-40)
+                obst.getImageView().setLayoutY(obst.getImageView().getLayoutY()+2);
+            if(gameCharacter.getBoundsInParent().intersects(obst.getImageView().getBoundsInParent()))
+            {
+                if(obst.getType()==1)
+                    decreaseScore(50);
+                else if(obst.getType()==2)
+                {  
+                    if(obst.getHit()==false)
+                    {
+                        showCard();
+                        obst.setHit(true);
                     }
                 }
-            }
+                else if(obst.getType()==3)
+                    window.hide();
+                    
+            }  
+// else
+                   // quitGame();
         }
+    }
+    
+    private int cards=0;
+    public void showCard()
+    {
+       card = new Rectangle(30,45);
+       card.setLayoutX(650);
+       card.setLayoutY(30);
+       card.setFill(Color.YELLOW);
+       cards++;
+       if(cards<2)         
+           gameLayout.getChildren().add(card);
+       else
+         window.hide();
+         //quit  
+    }
+    public void changeDir(ImageView player,int direction){
+        counter+=15;
+        if(counter<150)
+        {   
+           
+            if(direction==1) 
+                player.setLayoutX(player.getLayoutX()-15);
+            else if(direction==2)
+                player.setLayoutX(player.getLayoutX()+15);
+        }
+        else
+        { 
+            counter=0;
+            changeDirection.stop();
+        }
+        
+        }
+    public void scoreChange(int scoreCnt){
+        String Scr = Integer.toString(scoreCounter);
+            
+        if(scoreCounter%10==0)
+        {
+            score.setLayoutX(700);
+            score.setLayoutY(70);
+            
+        if(gameLayout.getChildren().contains(score));
+            gameLayout.getChildren().remove(score);
+            score.setText(Scr);
+            
+            gameLayout.getChildren().add(score);
+        }
+        
+        scoreCounter++;
+    }
+    public void decreaseScore(int score)
+    { 
+    scoreCounter-=5;
     }
 }
