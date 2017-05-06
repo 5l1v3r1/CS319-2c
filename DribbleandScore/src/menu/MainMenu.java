@@ -18,16 +18,26 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import game.GameEngine;
-
+import data.DataManager;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.io.File;
+import java.util.Arrays;
+import javafx.collections.FXCollections;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.collections.ObservableList;
 
 public class MainMenu extends Application {
     private Stage window,game;
     
     private Scene mainMenu,playGame,settings,howToPlay,credits,highScores;
     private ImageView background,background2,background3,background4,background5,background6;
+    
+    private TableView<Scores> HStable;
+    private DataManager dataManager;
+    private GameEngine gameEngine;
+    private MediaPlayer mediaPlayer;
+    
     @Override
     public void start(Stage primaryStage) {
         game = new Stage();
@@ -42,9 +52,9 @@ public class MainMenu extends Application {
         /* main menu part */
         
         //NEW ADDED
-           Media sound=new Media(new File("src/Sounds/Waka.mp3").toURI().toString());
-           MediaPlayer mediaPlayer=new MediaPlayer(sound);
-           mediaPlayer.play();
+        Media sound=new Media(new File("src/Sounds/Waka.mp3").toURI().toString());
+         mediaPlayer=new MediaPlayer(sound);
+        mediaPlayer.play();
        
         Button playGameBtn = new Button();
         playGameBtn.setText("Play Game");
@@ -102,7 +112,7 @@ public class MainMenu extends Application {
             levels[i].setText("Level" + (i+1));
             levels[i].setLayoutX(posX);
             levels[i].setLayoutY(posY);
-            levels[i].setOnAction((event) -> startGame());            
+            levels[i].setOnAction((event) -> startGame());
             if((i+1)%12==0)
             {
                 posY+=30;
@@ -111,10 +121,7 @@ public class MainMenu extends Application {
             else
                 posX+=60;
         }
-        
-        
-        
-        
+
         
         Button playToMainBtn = new Button();
         playToMainBtn.setText("Go back to Main Menu");
@@ -256,14 +263,29 @@ public class MainMenu extends Application {
        HStoMainBtn.setLayoutX(350);
        HStoMainBtn.setLayoutY(500);
        HStoMainBtn.setOnAction((event) -> window.setScene(mainMenu));
+       /*
        TableView HStable = new TableView();
-       HStable.setEditable(false);
+       HStable.setEditable(true);
        TableColumn nameHS = new TableColumn("Name");
        TableColumn scoreHS = new TableColumn("Score");
-       HStable.setLayoutX(300);
-       HStable.setLayoutY(70);
-       //getHsFromData Manager and add. 
+       HStable.setItems(getHS());
+       */
+        TableColumn<Scores, String> nameHS = new TableColumn<>("Name");
+        nameHS.setMinWidth(200);
+        nameHS.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+        //Price column
+        TableColumn<Scores, Double> scoreHS = new TableColumn<>("Score");
+        scoreHS.setMinWidth(100);
+        scoreHS.setCellValueFactory(new PropertyValueFactory<>("Score"));
+        HStable = new TableView<>();
+        HStable.setItems(getHS());
+        HStable.setLayoutX(300);
+        HStable.setLayoutY(70);
+       //getHsFromData Manager and add.
+       
        HStable.getColumns().addAll(nameHS,scoreHS);
+ 
         //below are scenes
         
         
@@ -300,8 +322,21 @@ public class MainMenu extends Application {
         window.show();
         
     }
+    public ObservableList<Scores> getHS(){
+       ObservableList<Scores> score = FXCollections.observableArrayList();
+       score.add(new Scores("Boran",250));
+       score.add(new Scores("Berke",170));
+       score.add(new Scores("Batikan",100));
+            
+        
+        
+        return score;
+    }
+    
+ 
     public void startGame(){
     window.close();
+    mediaPlayer.stop();
     new GameEngine().start(game);
     }
     /**
