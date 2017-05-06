@@ -49,7 +49,7 @@ public class GameEngine extends Application{
     private ArrayList<Obstacle> list;
     private ArrayList<Obstacle> refereeList;
     private int direction=0;
-    
+    private Rectangle card2;
     private MapManager map;
     @Override
     public void start(Stage primaryStage)
@@ -176,7 +176,7 @@ public class GameEngine extends Application{
                 }
                 else if(obst.getType()==2)
                 {
-                    System.out.println("lel");
+                    
                     if(obst.getHit()==false)
                     {
                         showCard();
@@ -203,11 +203,20 @@ public class GameEngine extends Application{
         card.setLayoutY(30);
         card.setFill(Color.YELLOW);
         cards++;
+        card2= new Rectangle(30,45);
+        card2.setLayoutX(650);
+        card2.setLayoutY(30);
+        card2.setFill(Color.RED);
         if(cards<2)
             gameLayout.getChildren().add(card);
         else
-            window.hide();
-        //quit
+        { 
+            
+            gameLayout.getChildren().add(card2);
+            decreaseScore(100);
+            
+        }
+//quit
     }
     public void changeDir(ImageView player,int direction){
         counter+=15;
