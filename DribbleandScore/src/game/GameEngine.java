@@ -24,10 +24,6 @@ import javafx.scene.shape.Rectangle;
 import map.MapManager;
 import utils.GameType;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import java.io.File;
-import data.DataManager;
 
 public class GameEngine extends Application{
 
@@ -190,7 +186,6 @@ public class GameEngine extends Application{
     private int cards=0;
     public void showCard()
     {
-<<<<<<< HEAD
         card = new Rectangle(30,45);
         card.setLayoutX(650);
         card.setLayoutY(30);
@@ -201,24 +196,6 @@ public class GameEngine extends Application{
         else
             window.hide();
         //quit
-=======
-       card = new Rectangle(30,45);
-       card.setLayoutX(650);
-       card.setLayoutY(30);
-       card.setFill(Color.YELLOW);
-       cards++;
-       if(cards<2){         
-           gameLayout.getChildren().add(card);
-           //New added
-           Media sound=new Media(new File("src/Sounds/Referee.mp3").toURI().toString());
-           MediaPlayer mediaPlayer=new MediaPlayer(sound);
-           mediaPlayer.play();
-           //ends new added
-       }
-       else
-         window.hide();
-         //quit  
->>>>>>> e14d33708ab72a9181dfdaa14a28b3a795b4f047
     }
     public void changeDir(ImageView player,int direction){
         counter+=15;
