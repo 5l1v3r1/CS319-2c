@@ -2,7 +2,6 @@
  *  author: Berke Soysal
  */
 package menu;
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -18,14 +17,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
+import game.GameEngine;
 public class MainMenu extends Application {
-    private Stage window;
+    private Stage window,game;
+    
     private Scene mainMenu,playGame,settings,howToPlay,credits,highScores;
     private ImageView background,background2,background3,background4,background5,background6;
     @Override
     public void start(Stage primaryStage) {
-        
+        game = new Stage();
         window= primaryStage;
         window.getIcons().add(new Image(MainMenu.class.getResourceAsStream("images/logoicon.png")));
         background = new ImageView(new Image(MainMenu.class.getResourceAsStream("images/wallpaperWithText.png")));
@@ -35,7 +35,7 @@ public class MainMenu extends Application {
         background5 = new ImageView(new Image(MainMenu.class.getResourceAsStream("images/wallpaperWithText.png")));
         background6 = new ImageView(new Image(MainMenu.class.getResourceAsStream("images/wallpaperWithText.png")));
         /* main menu part */
-        
+       
         Button playGameBtn = new Button();
         playGameBtn.setText("Play Game");
         playGameBtn.setLayoutX(350);
@@ -73,6 +73,15 @@ public class MainMenu extends Application {
         
         //above ones were for main menu ,below ones are for play game.
         //int levelsUnlocked = DataManager.getLevelInfo();
+        //DataManager hold levelsUnlocked
+        
+        /* 
+        
+        levelsUnlocked = getLevelsUnlocked();    
+        
+        */
+        
+        
         int levelsUnlocked = 73; //This information will come from DataManager, this is just for an example.
         Button[] levels = new Button[levelsUnlocked];
         int posX = 20;
@@ -83,6 +92,7 @@ public class MainMenu extends Application {
             levels[i].setText("Level" + (i+1));
             levels[i].setLayoutX(posX);
             levels[i].setLayoutY(posY);
+            levels[i].setOnAction((event) -> startGame());            
             if((i+1)%12==0)
             {
                 posY+=30;
@@ -280,7 +290,10 @@ public class MainMenu extends Application {
         window.show();
         
     }
-
+    public void startGame(){
+    window.close();
+    new GameEngine().start(game);
+    }
     /**
      * @param args the command line arguments
      */
