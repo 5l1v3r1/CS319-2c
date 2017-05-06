@@ -181,17 +181,19 @@ public class ShootEngine extends Application {
       {
        
        
-      if(ball.getLayoutX()-goalKeeper.getLayoutX()>0)
+      if(ball.getLayoutX()-goalKeeper.getLayoutX()>0 && goalKeeper.getLayoutX()<500)
       {
           
           goalKeeper.setLayoutX(goalKeeper.getLayoutX()+1);
       
       }
-      else if(ball.getLayoutX()-goalKeeper.getLayoutX()<0)
+      else if(ball.getLayoutX()-goalKeeper.getLayoutX()<0 && goalKeeper.getLayoutX()>300)
       {
           
           goalKeeper.setLayoutX(goalKeeper.getLayoutX()-1);
       }
+          
+      
           
       }
     }
@@ -318,4 +320,3 @@ public class ShootEngine extends Application {
     }
 }
     
-
