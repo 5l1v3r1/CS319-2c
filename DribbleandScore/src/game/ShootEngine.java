@@ -26,6 +26,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.io.File;
 import data.DataManager;
+import javafx.scene.text.FontWeight;
 /**
  *
  * @author berke
@@ -103,16 +104,26 @@ public class ShootEngine extends Application {
        powerBarPane.setLayoutY(520);
        powerBarPane.getChildren().addAll(outerRec2,powerBarRec);
        
+       Label directionText= new Label();
+       directionText.setFont(new Font(40));
+       directionText.setText("Direction");
        
-      
-    
-        initialLayout = new Pane();
-        initialLayout.getChildren().addAll(background,goal,goalKeeper,ball,directionBarPane,powerBarPane);
-        start = new Scene(initialLayout,800,600);
+       directionText.setLayoutX(50);
+       directionText.setLayoutY(470);
+       Label powerText = new Label();
+       powerText.setFont(new Font(40));
+       powerText.setText("Power");
+       powerText.setLayoutX(350);
+       powerText.setLayoutY(470);
+       initialLayout = new Pane();
+       initialLayout.getChildren().addAll(background,goal,goalKeeper,ball,directionBarPane,powerBarPane,directionText,powerText);
+       start = new Scene(initialLayout,800,600);
        
         window.setScene(start);
         window.setTitle("Dribble and Score");
         window.show();
+        
+        
         
         Timeline direction = new Timeline(new KeyFrame(
         Duration.millis(50),
