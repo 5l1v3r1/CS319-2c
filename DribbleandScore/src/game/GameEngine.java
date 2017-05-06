@@ -51,6 +51,7 @@ public class GameEngine extends Application{
     private int direction=0;
     private Rectangle card2;
     private MapManager map;
+    private int LevelScore;
     @Override
     public void start(Stage primaryStage)
     {
@@ -59,7 +60,7 @@ public class GameEngine extends Application{
         refereeList = new ArrayList<>();
         shootingStage = new Stage();
         window = primaryStage;
-
+        LevelScore=MainMenu.getScore();
         background = new ImageView(new Image(GameEngine.class.getResourceAsStream("images/SeBg.jpg")));
         gameCharacter= new ImageView(new Image(GameEngine.class.getResourceAsStream("images/gameCharacter.png")));
         obstacleView= new ImageView(new Image(GameEngine.class.getResourceAsStream("images/mud.png")));
@@ -251,7 +252,8 @@ public class GameEngine extends Application{
         }
 
         scoreCounter+=5;
-         if(scoreCounter == 1000)
+        System.out.println(LevelScore);
+         if(scoreCounter == LevelScore)
          {
              window.close();
              new ShootEngine().start(shootingStage);
