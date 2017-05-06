@@ -242,7 +242,7 @@ public class ShootEngine extends Application {
             hitsThePost.stop();
        }
     public void barMovement(Rectangle barRec){
-        System.out.println(ball.getLayoutX());
+        
          
 
         if(!isEmpty)
