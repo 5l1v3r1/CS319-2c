@@ -21,6 +21,11 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 
+
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.io.File;
+import data.DataManager;
 /**
  *
  * @author berke
@@ -196,9 +201,16 @@ public class ShootEngine extends Application {
         switch (isGoal) {
             case -1:
                 goalText.setText("Bad Shot!");
+                Media sound=new Media(new File("src/Sounds/badshot.mp3").toURI().toString());
+                MediaPlayer mediaPlayer=new MediaPlayer(sound);
+                mediaPlayer.play();
                 break;
             case 0:
                 goalText.setText("Saved by the goalkeeper!");
+                Media sound2=new Media(new File("src/Sounds/aaaa.mp3").toURI().toString());
+                MediaPlayer mediaPlayer2=new MediaPlayer(sound2);
+                mediaPlayer2.play();
+                
                 break;
             case 2:
                 goalText.setText("Oooh! It hits the post!");
@@ -208,12 +220,9 @@ public class ShootEngine extends Application {
                 break;
             default:
                 goalText.setText("Gooooaaaal!!"); //Datamanager shoud make a save here
-                /* put your datamanager code here
-                
-                HERE
-                
-                
-                */
+                Media sound4=new Media(new File("src/Sounds/Goal.mp3").toURI().toString());
+                MediaPlayer mediaPlayer4=new MediaPlayer(sound4);
+                mediaPlayer4.play();
                 break;
         }
         goalText.setFont(new Font("Arial", 45));

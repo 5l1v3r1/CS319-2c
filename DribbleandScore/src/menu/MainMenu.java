@@ -18,6 +18,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import game.GameEngine;
+
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.io.File;
+
 public class MainMenu extends Application {
     private Stage window,game;
     
@@ -35,6 +40,11 @@ public class MainMenu extends Application {
         background5 = new ImageView(new Image(MainMenu.class.getResourceAsStream("images/wallpaperWithText.png")));
         background6 = new ImageView(new Image(MainMenu.class.getResourceAsStream("images/wallpaperWithText.png")));
         /* main menu part */
+        
+        //NEW ADDED
+           Media sound=new Media(new File("src/Sounds/Waka.mp3").toURI().toString());
+           MediaPlayer mediaPlayer=new MediaPlayer(sound);
+           mediaPlayer.play();
        
         Button playGameBtn = new Button();
         playGameBtn.setText("Play Game");
